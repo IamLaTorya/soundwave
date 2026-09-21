@@ -29,12 +29,12 @@ try {
 
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',')
-  : ['http://localhost:5173',
-    'https://soundwave-starter.netlify.app'
+  : ['http://localhost:5173'//,
+    //'https://soundwave-starter.netlify.app'
   ];
-if (process.env.CLIENT_URL && !allowedOrigins.includes('https://soundwave-starter.netlify.app')) {
-  allowedOrigins.push('https://soundwave-starter.netlify.app');
-}
+// if (process.env.CLIENT_URL && !allowedOrigins.includes('https://soundwave-starter.netlify.app')) {
+//   allowedOrigins.push('https://soundwave-starter.netlify.app');
+// }
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
