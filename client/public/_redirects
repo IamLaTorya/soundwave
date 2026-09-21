@@ -1,3 +1,4 @@
 /api/*  http://localhost:5000  200
+/api/*  https://soundwave-h6gy.onrender.com  200
 
 /*    /index.html   200
