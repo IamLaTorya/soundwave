@@ -6,7 +6,7 @@ import Album from './models/Album.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+const MONGODB_URI = process.env.MONGODB_URI;
 // ---------------------------------------------------------------
 // CONNECT TO THE DATABASE
 //
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 // ---------------------------------------------------------------
 
 try {
-  await mongoose.connect(process.env.MONGODB_URI);
+  await mongoose.connect(MONGODB_URI);
   console.log('Connected to MongoDB');
 } catch (err) {
   console.error('Could not connect to MongoDB:', err.message);
@@ -32,12 +32,6 @@ const allowedOrigins = process.env.CLIENT_URL
   : ['http://localhost:5173'];
 
 app.use(cors({ origin: allowedOrigins }));
-app.get('/api/debug', (req, res) => {
-  res.json({
-    clientUrl: process.env.CLIENT_URL ?? 'NOT SET',
-    allowedOrigins,
-  });
-});
 app.use(express.json());
 
 // A malformed id like "banana" is not a valid MongoDB ObjectId.
