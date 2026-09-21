@@ -57,12 +57,12 @@ export async function getAlbums(search) {
   // ===== TODO (LAB 2) =====================================
   // Send the request and pass the result to handleResponse.
   //
-  //   const res = await fetch(url);
-  //   return handleResponse(res);
+    const res = await fetch(url);
+    return handleResponse(res);
   //
   // Then DELETE the throw below.
   // ========================================================
-  throw new Error('getAlbums() is not implemented yet — see Lab 2 (Day 2)');
+  // throw new Error('getAlbums() is not implemented yet — see Lab 2 (Day 2)');
 }
 
 // ---------------------------------------------------------------
@@ -78,14 +78,14 @@ export async function createAlbum(album) {
   // These are exactly what you set in Postman: the method dropdown,
   // the Body -> raw -> JSON dropdown, and the text you typed.
   //
-  //   const res = await fetch(`${BASE_URL}/api/albums`, {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(album),
-  //   });
-  //   return handleResponse(res);
+    const res = await fetch(`${BASE_URL}/api/albums`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(album),
+    });
+    return handleResponse(res);
   // ========================================================
-  throw new Error('createAlbum() is not implemented yet — see Lab 3 (Day 3)');
+  // throw new Error('createAlbum() is not implemented yet — see Lab 3 (Day 3)');
 }
 
 // ---------------------------------------------------------------
@@ -96,17 +96,15 @@ export async function updateAlbum(id, changes) {
   // Same three things as POST, but method: 'PATCH' and the URL
   // includes the id.
   //
-  //   const res = await fetch(`${BASE_URL}/api/albums/${id}`, {
-  //     method: 'PATCH',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(changes),
-  //   });
-  //   return handleResponse(res);
-  // ========================================================
-  throw new Error('updateAlbum() is not implemented yet — see Lab 4a (Day 4)');
-}
-
-// ---------------------------------------------------------------
+    const res = await fetch(`${BASE_URL}/api/albums/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(changes),
+    });
+    return handleResponse(res);
+  };
+  // ===========================
+  // ---------------------------------------------------------------
 // DELETE an album
 // ---------------------------------------------------------------
 export async function deleteAlbum(id) {
@@ -114,10 +112,10 @@ export async function deleteAlbum(id) {
   // No headers and no body needed — there is nothing to send.
   // handleResponse returns null for the 204.
   //
-  //   const res = await fetch(`${BASE_URL}/api/albums/${id}`, {
-  //     method: 'DELETE',
-  //   });
-  //   return handleResponse(res);
+    const res = await fetch(`${BASE_URL}/api/albums/${id}`, {
+      method: 'DELETE',
+    });
+    return handleResponse(res);
   // ========================================================
-  throw new Error('deleteAlbum() is not implemented yet — see Lab 3 (Day 3)');
+  // throw new Error('deleteAlbum() is not implemented yet — see Lab 3 (Day 3)');
 }
