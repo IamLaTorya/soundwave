@@ -14,7 +14,7 @@
 // ---------------------------------------------------------------
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
-const res = await fetch(`${BASE_URL}/api/albums`);
+// const res = await fetch(`${BASE_URL}/api/albums`);
 
 /**
  * Every response goes through here.
@@ -103,7 +103,7 @@ export async function updateAlbum(id, changes) {
       body: JSON.stringify(changes),
     });
     return handleResponse(res);
-  };
+  }
   // ===========================
   // ---------------------------------------------------------------
 // DELETE an album
