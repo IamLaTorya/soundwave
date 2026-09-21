@@ -1,24 +1,30 @@
 import { useState, useEffect } from 'react';
-import { getAlbums, createAlbum, deleteAlbum } from './api.js';
+import { getAlbums, createAlbum, updateAlbum, deleteAlbum } from './api.js';
 import AlbumList from './components/AlbumList.jsx';
 import AlbumForm from './components/AlbumForm.jsx';
+import SearchBar from './components/SearchBar.jsx';
 
 export default function App() {
   const [albums, setAlbums] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // A separate error for the form. A failure loading the list and a
-  // failure saving the form are different problems and belong in
-  // different places on screen.
   const [formError, setFormError] = useState(null);
 
-  // Pulled out of useEffect so we can call it again after any change.
-  async function loadAlbums() {
+  // What the user has typed in the search box.
+  const [search, setSearch] = useState('');
+
+  // Which album is currently being edited. null = nobody.
+  //
+  // Note where this lives: "am I being edited" is a fact about the
+  // SCREEN, not about the album, so it belongs in component state,
+  // not in the data from the server.
+  const [editingId, setEditingId] = useState(null);
+
+  async function loadAlbums(searchTerm = search) {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await getAlbums();
+      const data = await getAlbums(searchTerm);
       setAlbums(data);
     } catch (err) {
       setError(err.message);
@@ -27,9 +33,11 @@ export default function App() {
     }
   }
 
+  // Re-runs whenever `search` changes.
   useEffect(() => {
-    loadAlbums();
-  }, []);
+    loadAlbums(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // -------------------------------------------------------------
   // CREATE
@@ -37,18 +45,33 @@ export default function App() {
   async function handleCreate(newAlbum) {
     try {
       setFormError(null);
-
-      // TODO (LAB 3): save it on the server, then reload the list so
-      // the screen matches the server.
-      
       await createAlbum(newAlbum);
       await loadAlbums();
-
-      return true;   // tells the form it can clear itself
+      return true;
     } catch (err) {
-      // This is the message YOUR backend wrote in its guard clause.
       setFormError(err.message);
-      return false;  // keeps the user's typing
+      return false;
+    }
+  }
+
+  // -------------------------------------------------------------
+  // UPDATE
+  // -------------------------------------------------------------
+  async function handleUpdate(id, changes) {
+    try {
+      // TODO (LAB 4a): send only the changed fields, then reload
+      // and close the editor.
+      //
+      await updateAlbum(id, changes);
+      await loadAlbums();
+      setEditingId(null);
+
+      return true;
+    } catch (err) {
+      setError(err.message);
+      // Note: we do NOT close the editor here. A failed save should
+      // never throw away what the user typed.
+      return false;
     }
   }
 
@@ -59,18 +82,16 @@ export default function App() {
     if (!window.confirm('Delete this album?')) return;
 
     try {
-      // TODO (LAB 3): delete it on the server, then reload the list.
-      //
       await deleteAlbum(id);
       await loadAlbums();
-
     } catch (err) {
       setError(err.message);
-      // Someone else may have deleted it already. Refresh either way
-      // so the screen stops showing something that doesn't exist.
       loadAlbums();
     }
   }
+
+  // Two different reasons the list can be empty, two different messages.
+  const isSearching = search.trim() !== '';
 
   return (
     <div className="page">
@@ -82,6 +103,8 @@ export default function App() {
       <main>
         <AlbumForm onSubmit={handleCreate} error={formError} />
 
+        <SearchBar value={search} onChange={setSearch} />
+
         {isLoading && <p className="status">Loading albums…</p>}
 
         {error && (
@@ -89,11 +112,22 @@ export default function App() {
         )}
 
         {!isLoading && !error && albums.length === 0 && (
-          <p className="status">No albums yet. Add your first one above!</p>
+          <p className="status">
+            {isSearching
+              ? `No albums match "${search}".`
+              : 'No albums yet. Add your first one above!'}
+          </p>
         )}
 
         {!isLoading && !error && albums.length > 0 && (
-          <AlbumList albums={albums} onDelete={handleDelete} />
+          <AlbumList
+            albums={albums}
+            editingId={editingId}
+            onStartEdit={setEditingId}
+            onCancelEdit={() => setEditingId(null)}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
         )}
       </main>
     </div>
