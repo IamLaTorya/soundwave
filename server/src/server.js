@@ -32,6 +32,12 @@ const allowedOrigins = process.env.CLIENT_URL
   : ['http://localhost:5173'];
 
 app.use(cors({ origin: allowedOrigins }));
+app.get('/api/debug', (req, res) => {
+  res.json({
+    clientUrl: process.env.CLIENT_URL ?? 'NOT SET',
+    allowedOrigins,
+  });
+});
 app.use(express.json());
 
 // A malformed id like "banana" is not a valid MongoDB ObjectId.
