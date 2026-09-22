@@ -1,7 +1,7 @@
 export default function SearchBar({ value, onChange }) {
   return (
     <div className="search-bar">
-      <label htmlFor="search">Search by artist</label>
+      <label htmlFor="search">Search by artist or title</label>
       <div className="search-row">
         <input
           id="search"
