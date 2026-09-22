@@ -71,7 +71,12 @@ app.get('/api/albums', async (req, res, next) => {
 
     // Build the filter. No artist means no filter: {} matches everything.
     const filter = artist
-      ? { artist: { $regex: artist, $options: 'i' } }
+      ? {//🔍 NEW FILTER: Searches BOTH artist AND title using an $or condition
+        $or: [
+          { artist: { $regex: artist, $options: 'i' } },
+          { title: { $regex: artist, $options: 'i' } },
+        ]
+      }
       : {};
 
     const albums = await Album.find(filter).sort({ createdAt: -1 });
