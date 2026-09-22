@@ -29,13 +29,15 @@ try {
 
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',')
-  : ['http://localhost:5173'//,
-    //'https://soundwave-starter.netlify.app'
+  : ['http://localhost:5173',
+    'https://soundwave-starter.netlify.app'
   ];
-// if (process.env.CLIENT_URL && !allowedOrigins.includes('https://soundwave-starter.netlify.app')) {
-//   allowedOrigins.push('https://soundwave-starter.netlify.app');
-// }
-app.use(cors({ origin: allowedOrigins }));
+if (process.env.CLIENT_URL) {
+  // If Render has a CLIENT_URL, split it and add those origins too
+  const envOrigins = process.env.CLIENT_URL.split(',').map(url => url.trim());
+  allowedOrigins.push(...envOrigins);
+}
+app.use(cors({ origin: allowedOrigins, credentials: true, optionsSuccessStatus: 200 }));//this provides support for older browsers and specific preflight checks (like searches)
 app.use(express.json());
 
 // A malformed id like "banana" is not a valid MongoDB ObjectId.
